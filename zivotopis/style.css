@@ -1,0 +1,63 @@
+.nadpis{
+    color:black;
+    font-family: 'Jura', sans-serif;
+}
+.podnadpis{
+    font-family: 'Jura', sans-serif;
+}
+.nadpisSekce{
+    color: limegreen;
+    font-family: 'Jura', sans-serif;
+    font-style:italic;
+    float: left;
+    width: 25%;
+}
+.textSekce{
+    float: right;
+    width: 75%;
+    font-family: "Arial",Helvetica,SansSerif;
+}
+.kontakty{
+    float:right;
+    font-family: "Arial",Helvetica,SansSerif;
+    padding: 20px;
+}
+.kontakty ul{
+    text-decoration: none;
+    list-style: none;
+}
+.hlavicka{
+    border-bottom: 2px solid 	limegreen;
+    background: 	lightgray;
+    border-radius: 15px 15px 0px 0px;
+}
+.jmeno{
+    float:left;
+    padding: 20px;
+}
+.clear{clear:both;}
+
+.sekce{
+    border-top: 1px solid darkgray;
+    padding: 20px;
+    background-color: #ededed;
+}
+.hlavni{
+    width: 90%;
+    max-width: 800px;
+    margin: 30px auto;
+}
+body{
+    background-color: darkgreen;
+}
+
+a{
+    color: green;
+    text-decoration: none;
+}
+.patka{
+    border-radius: 0px 0px 15px 15px;
+    background: 	lightgray;
+    height: 50px;
+    border-top: 2px solid 	limegreen;
+}
