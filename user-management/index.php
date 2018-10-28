@@ -15,4 +15,5 @@ email varchar(50),
 description text,
 created datetime
 )
+ *
  */
