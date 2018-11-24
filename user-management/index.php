@@ -17,3 +17,7 @@ created datetime
 )
  *
  */
+echo '<nav>
+<a href="<?..BASE_URL_._"?page=contact_me"_?">Contact me</a>
+<a href="<?..BASE_URL_._"?page=contact_me"_?">Contact me</a>
+</nav>';
