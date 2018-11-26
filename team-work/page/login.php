@@ -19,7 +19,7 @@ if (!empty($_POST) && !empty($_POST["loginMail"]) && !empty($_POST["loginPasswor
         $_SESSION["user_id"] = $user["id"];
         $_SESSION["username"] = $user["username"];
         $_SESSION["email"] = $user["email"];
-        header("Location:" . BASE_URL);
+        //header("Location:" . BASE_URL);
     }
 
 } else if (!empty($_POST)) {
