@@ -1,15 +1,14 @@
-<h1>Značka</h1>
+<h1>Palivo</h1>
 <?php
 if ($_GET["action"] == "read-all") {
-    echo "<h2>Všechny značky</h2>";
+    echo "<h2>Všechno palivo</h2>";
     $userDao = new UserRepository(Connection::getPdoInstance());
-    $allUsersResult = $userDao->getAllBrands();
+    $allUsersResult = $userDao->getAllFuel();
 
     $datatable = new DataTable($allUsersResult);
-    $datatable->addColumn("id", "ID");
+    $datatable->addColumn("idfuel", "ID");
     $datatable->addColumn("name", "Nazev");
     $datatable->render();
 
 
 }
-?>

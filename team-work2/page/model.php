@@ -1,7 +1,7 @@
-<h1>Značka</h1>
+<h1>Model</h1>
 <?php
 if ($_GET["action"] == "read-all") {
-    echo "<h2>Všechny značky</h2>";
+    echo "<h2>Všechny modely</h2>";
     $userDao = new UserRepository(Connection::getPdoInstance());
     $allUsersResult = $userDao->getAllBrands();
 

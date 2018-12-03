@@ -1,13 +1,14 @@
-<h1>Značka</h1>
+<h1>Model Značka</h1>
 <?php
 if ($_GET["action"] == "read-all") {
-    echo "<h2>Všechny značky</h2>";
+    echo "<h2>Všechny modely a značky</h2>";
     $userDao = new UserRepository(Connection::getPdoInstance());
-    $allUsersResult = $userDao->getAllBrands();
+    $allUsersResult = $userDao->getAllModelAndBrands();
 
     $datatable = new DataTable($allUsersResult);
     $datatable->addColumn("id", "ID");
-    $datatable->addColumn("name", "Nazev");
+    $datatable->addColumn("brand", "Značka");
+    $datatable->addColumn("model", "Model");
     $datatable->render();
 
 
