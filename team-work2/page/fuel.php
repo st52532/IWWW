@@ -1,5 +1,11 @@
 <h1>Palivo</h1>
 <?php
+
+if ($_GET["action"]=="remove"){
+    $userDao = new UserRepository(Connection::getPdoInstance());
+    //$userDao->removeById()
+
+}
 if ($_GET["action"] == "read-all") {
     echo "<h2>Všechno palivo</h2>";
     $userDao = new UserRepository(Connection::getPdoInstance());
