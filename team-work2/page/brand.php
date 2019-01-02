@@ -10,10 +10,15 @@ if ($_GET["action"] == "read-all") {
     $userDao = new BrandRepository(Connection::getPdoInstance());
     $allUsersResult = $userDao->getAllBrands();
 
-    $datatable = new DataTable($allUsersResult,"brand");
+    $datatable = new DataTable($allUsersResult,"brand-update");
     $datatable->addColumn("idbrand", "ID");
     $datatable->addColumn("name", "Značka");
     $datatable->render();
+
+    $userDao = new ModelRepository(Connection::getPdoInstance());
+    $allUsersResult = $userDao->getAllModel();
+    $datatable2 = new JsonModelBrand($allUsersResult,"model");
+    echo $datatable2->get();
 }
 ?>
 

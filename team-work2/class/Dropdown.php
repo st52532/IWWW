@@ -25,9 +25,7 @@ class Dropdown
 
     public function render()
     {
-        echo "<select name='";
-        echo $this->dropdownname;
-        echo "'>";
+        echo "<select name='". $this->dropdownname ."' id='". $this->dropdownname."'>";
         foreach ($this->dataSet as $row) {
             $iterace=0;
             foreach ($this->columns as $key => $value) {

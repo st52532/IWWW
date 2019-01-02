@@ -38,4 +38,24 @@ class BrandRepository
         $stmt->bindParam(':id', $id);
         $stmt->execute();
     }
+
+    public function getBrandById($id) {
+        $stmt2 = $this->conn->prepare("SET NAMES 'utf8'");
+        $stmt2->execute();
+
+        $stmt = $this->conn->prepare("SELECT * FROM brand where idbrand=:id");
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+
+    public function update($idbrand, $name){
+        $stmt2 = $this->conn->prepare("SET NAMES 'utf8'");
+        $stmt2->execute();
+
+        $stmt = $this->conn->prepare(" UPDATE brand SET name=:name where idbrand=:idbrand");
+        $stmt->bindParam(':idbrand', $idbrand);
+        $stmt->bindParam(':name', $name);
+        $stmt->execute();
+    }
 }
