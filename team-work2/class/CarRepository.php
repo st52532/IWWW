@@ -88,4 +88,23 @@ where idbrand like :idbrand2
         $stmt->execute();
         return $stmt->fetch();
     }
+
+    public function getLastIndex(){
+        $stmt2 = $this->conn->prepare("SET NAMES 'utf8'");
+        $stmt2->execute();
+
+        $stmt = $this->conn->prepare(" select MAX(idcar) from car");
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+
+    public function insertCarEquipment($equipment_idequipment, $car_idcar) {
+        $stmt2 = $this->conn->prepare("SET NAMES 'utf8'");
+        $stmt2->execute();
+
+        $stmt = $this->conn->prepare("INSERT INTO nova.car_has_equipment (car_idcar, equipment_idequipment) values (:car_idcar, :equipment_idequipment)");
+        $stmt->bindParam(':car_idcar', $car_idcar);
+        $stmt->bindParam(':equipment_idequipment', $equipment_idequipment);
+        $stmt->execute();
+    }
 }

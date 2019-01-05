@@ -14,11 +14,6 @@ if ($_GET["action"] == "read-all") {
     $datatable->addColumn("idbrand", "ID");
     $datatable->addColumn("name", "Značka");
     $datatable->render();
-
-    $userDao = new ModelRepository(Connection::getPdoInstance());
-    $allUsersResult = $userDao->getAllModel();
-    $datatable2 = new JsonModelBrand($allUsersResult,"model");
-    echo $datatable2->get();
 }
 ?>
 

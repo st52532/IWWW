@@ -78,7 +78,19 @@ for ($i=0; $i<count($files); $i++)
     }
 }
 ?>
+
     </div>
+    <?php
+    $userDao = new EquipmentRepository(Connection::getPdoInstance());
+    $allCarsResul = $userDao->getEquipmentById($_GET["id"]);
+
+    echo "<ul>";
+    foreach ($allCarsResul as $value) {
+        echo "<li>".$value[0]."</li>";
+    }
+    echo "</ul>";
+
+    ?>
     <h2>Rezervace</h2>
     <form action="/action_page.php" method="get">
         Jméno a příjmení: <input type="text" name="name"><br>

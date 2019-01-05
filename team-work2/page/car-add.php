@@ -1,6 +1,6 @@
 <script>
     function hlavni() {
-        location.replace("http://localhost:63342/IWWW/team-work2/index.php?page=car&action=read-all")
+        // location.replace("http://localhost:63342/IWWW/team-work2/index.php?page=car&action=read-all")
     }
 </script>
 <form enctype="multipart/form-data" method="POST">
@@ -48,45 +48,58 @@
                         $uploadOk = 0;
                     }
                 }
-// Check if file already exists
+                // Check if file already exists
                 if (file_exists($target_file)) {
-                    echo "Sorry, file already exists.";
                     $uploadOk = 0;
                 }
-// Check file size
+                // Check file size
                 if ($_FILES["fileToUpload"]["size"][$i] > 500000) {
-                    echo "Sorry, your file is too large.";
                     $uploadOk = 0;
                 }
-// Allow certain file formats
+                // Allow certain file formats
                 if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
                     && $imageFileType != "gif") {
-                    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
                     $uploadOk = 0;
                 }
-// Check if $uploadOk is set to 0 by an error
+                // Check if $uploadOk is set to 0 by an error
                 if ($uploadOk == 0) {
-                    echo "Sorry, your file was not uploaded.";
-// if everything is ok, try to upload file
+
+                // if everything is ok, try to upload file
                 } else {
                     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"][$i], $target_file)) {
                         echo "The file " . basename($_FILES["fileToUpload"]["name"][$i]) . " has been uploaded.";
-                    } else {
-                        echo "Sorry, there was an error uploading your file.";
                     }
                 }
             }
 
-            // echo "<img src='".$fullPath .$_FILES["fileToUpload"]["name"]. "' alt='error'>";
+            $carDao = new CarRepository(Connection::getPdoInstance());
+            $carDao->insertCar($_POST["mileage"], $_POST["year"], $_POST["power"], $_POST["gearbox"], $_POST["fuel"], $_POST["color"], $_POST["price"], $_POST["brandmodel"], $_POST["prew"], $folder);
 
-            //konec
-            //success
-            $userDao = new CarRepository(Connection::getPdoInstance());
-            $allUsersResult = $userDao->insertCar($_POST["mileage"], $_POST["year"], $_POST["power"], $_POST["gearbox"], $_POST["fuel"], $_POST["color"], $_POST["price"], $_POST["brandmodel"], $_POST["prew"], $folder);
+            $lastIndex = $carDao->getLastIndex()[0];
 
+            foreach ($_POST["equipment"] as $key => $data) {
+                if (is_array($data)) {
+                    displayRecursiveResults($data);
+                } elseif (is_object($data)) {
+                    displayRecursiveResults($data);
+                } else {
+                    echo "Equip IDCar: " . $lastIndex . " IDEquip: " . $key . "<br />";
+                }
+            }
+
+            foreach ($_POST["specEquipment"] as $key => $data) {
+                if (is_array($data)) {
+                    displayRecursiveResults($data);
+                } elseif (is_object($data)) {
+                    displayRecursiveResults($data);
+                } else {
+                    if (!empty($data)) {
+                        echo "SpecialEquip IDCar:" . $lastIndex . " IDSpecialEquip: " . $key . " Data: " . $data . "<br />";
+                    }
+                }
+            }
 
             $successFeedback = "Model byl přidán";
-            //echo "<h1>".$_POST["fileToUpload"]."</h1>";
             echo 'Vkladam...';
             echo '<div class="loader"></div>';
             echo '<script type="text/javascript">',
@@ -111,8 +124,8 @@
 
     Značka a model:<br>
     <?php
-    $userDao = new ModelRepository(Connection::getPdoInstance());
-    $allUsersResult = $userDao->getAllModel();
+    $carDao = new ModelRepository(Connection::getPdoInstance());
+    $allUsersResult = $carDao->getAllModel();
 
     $datatable = new Dropdown($allUsersResult, "brandmodel");
     $datatable->addColumn("idmodel", "ID");
@@ -154,7 +167,6 @@
     <input type="file" name="fileToUpload[]" id="fileToUpload" onchange="displayFiles();" multiple>
     <p>Náhled</p>
     <div id="list"></div>
-    <input type="submit" value="Nahrát" name="submit">
     <script>
         var files = document.getElementById("fileToUpload");
 
@@ -175,21 +187,18 @@
                 var text = document.createTextNode(file.name);
                 list.appendChild(text);
             }
-
-            //pole.innerHTML = file.name;
-            //pole.innerHTML = str;
         }
     </script>
     <h2>Vybava</h2>
     <?php
-    $userDao = new EquipmentRepository(Connection::getPdoInstance());
-    $allUsersResult = $userDao->getAllEquipment();
+    $equipDao = new EquipmentRepository(Connection::getPdoInstance());
+    $allUsersResult = $equipDao->getAllEquipment();
 
     $datatable = new JsonEquipment($allUsersResult, "brandmodel");
     $json = json_decode($datatable->get());
 
     foreach ($json as $item) {
-        echo '<input type="checkbox" name="equipment" id=' . $item->idequipment . ' value=' . $item->idequipment . '>';
+        echo '<input type="checkbox" name="equipment[' . $item->idequipment . ']" id=' . $item->idequipment . ' value=' . $item->idequipment . '>';
         echo $item->value . '<br>';
     }
 
@@ -197,17 +206,18 @@
     ?>
     <h2>Specialni vybava</h2>
     <?php
-    $userDao = new SpecEquipmentRepository(Connection::getPdoInstance());
-    $allUsersResult = $userDao->getAllEquipment();
+    $carDao = new SpecEquipmentRepository(Connection::getPdoInstance());
+    $allUsersResult = $carDao->getAllEquipment();
 
     $datatable = new JsonSpecEquipment($allUsersResult, "brandmodel");
     $json = json_decode($datatable->get());
 
     foreach ($json as $item) {
         echo $item->name . '<br>';
-        echo '<input type="text"  name="equipment" id=' . $item->idspec_equipment . ' value=' . $item->idspec_equipment . '><br>';
+        echo '<input type="text"  name="specEquipment[' . $item->idspecific_equipment . ']" id=' . $item->idspecific_equipment . '><br>';
     }
 
 
     ?>
+    <input type="submit" value="Nahrát" name="submit">
 </form>
