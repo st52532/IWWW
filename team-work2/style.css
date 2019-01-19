@@ -260,3 +260,53 @@ dd {
     display: table;
     clear: both;
 }
+
+.equipment{
+    -webkit-column-count: 3; /* Chrome, Safari, Opera */
+    -moz-column-count: 3; /* Firefox */
+    column-count: 3;
+}
+.specEquip{
+    max-width: 500px;
+    border: none;
+}
+.specEquip tr{
+    border-bottom: 1px dotted grey;
+    background-color: transparent;
+}
+.specEquip th{
+    border-bottom: 1px dotted grey;
+    background-color: transparent;
+}
+.specEquip th{
+    font-weight: normal;
+    color: grey;
+   width: 50%;
+}
+
+@media print {
+    .side {
+        display: none;
+    }
+    .footer{
+        display:none;
+    }
+    .reservation{
+        display:none;
+    }
+    .galerie .maly img{
+        margin: 1px;
+        padding: 1px;
+        min-width:30%;
+        width: 30%;
+    }
+    .galerie .velky img{
+        margin: 1px;
+        padding: 1px;
+        min-width: 30%;
+        width:30%;
+    }
+    .toptop li a{
+        color: #35478C;
+    }
+}

@@ -71,6 +71,25 @@ where idbrand like :idbrand2
         return $stmt->fetchAll();
     }
 
+    public function updateCar($mileage, $year, $power, $gearbox, $fuel, $color, $price, $model_idmodel, $idcar)
+    {
+        $stmt2 = $this->conn->prepare("SET NAMES 'utf8'");
+        $stmt2->execute();
+
+        $stmt = $this->conn->prepare("UPDATE car SET mileage=:mileage,year=:year,power=:power,gearbox=:gearbox,fuel=:fuel,color=:color,price=:price,model_idmodel=:model_idmodel,model_brand_idbrand=(SELECT brand_idbrand from model where idmodel=:model_idmodel)
+   where idcar=:idcar");
+        $stmt->bindParam(':mileage', $mileage);
+        $stmt->bindParam(':year', $year);
+        $stmt->bindParam(':power', $power);
+        $stmt->bindParam(':gearbox', $gearbox);
+        $stmt->bindParam(':fuel', $fuel);
+        $stmt->bindParam(':color', $color);
+        $stmt->bindParam(':price', $price);
+        $stmt->bindParam(':model_idmodel', $model_idmodel);
+        $stmt->bindParam(':idcar', $idcar);
+        $stmt->execute();
+    }
+
     public function removeById($id)
     {
         $stmt = $this->conn->prepare("DELETE from car where idcar=:id");
@@ -96,15 +115,5 @@ where idbrand like :idbrand2
         $stmt = $this->conn->prepare(" select MAX(idcar) from car");
         $stmt->execute();
         return $stmt->fetch();
-    }
-
-    public function insertCarEquipment($equipment_idequipment, $car_idcar) {
-        $stmt2 = $this->conn->prepare("SET NAMES 'utf8'");
-        $stmt2->execute();
-
-        $stmt = $this->conn->prepare("INSERT INTO nova.car_has_equipment (car_idcar, equipment_idequipment) values (:car_idcar, :equipment_idequipment)");
-        $stmt->bindParam(':car_idcar', $car_idcar);
-        $stmt->bindParam(':equipment_idequipment', $equipment_idequipment);
-        $stmt->execute();
     }
 }

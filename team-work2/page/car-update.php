@@ -3,6 +3,25 @@
         // location.replace("http://localhost:63342/IWWW/team-work2/index.php?page=car&action=read-all")
     }
 </script>
+<?php
+$reservationDao = new CarRepository(Connection::getPdoInstance());
+$carResult = $reservationDao->getCarById($_GET["id"]);
+
+$brandnameValue = $carResult["brandname"];
+$modelnameValue = $carResult["modelname"];
+$folderValue = $carResult["folder"];
+$imageValue = $carResult["image"];
+$yearValue = $carResult["year"];
+$mileageValue = $carResult["mileage"];
+$powerValue = $carResult["power"];
+$gearboxValue = $carResult["gearbox"];
+$fuelValue = $carResult["fuel"];
+$colorValue = $carResult["color"];
+$priceValue = $carResult["price"];
+$date1 = explode(" ", $carResult["date"]);
+$date2 = explode("-", $date1[0]);
+$brandId = $carResult["idbrand"];
+?>
 <form enctype="multipart/form-data" method="POST">
     <?php
     $errors = array();
@@ -16,81 +35,26 @@
 
         if (empty($errors)) {
 
-            //zacatek
-            echo "*****";
-            $rnd = rand(0, 99);
-            //echo date("yzHis");
-            //echo $rnd;
-            $folder = date("yzHis") . "" . $rnd;
-            $fullPath = "photos/" . $folder . "/";
-
-            //echo $_FILES['uploaded_file'];
-
-            if (!file_exists($fullPath)) {
-                mkdir($fullPath, 0777, true);
-            }
-
-
-            $target_dir = $fullPath;
-            for ($i = 0; $i < sizeof($_FILES["fileToUpload"]); $i++) {
-
-                $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"][$i]);
-                $uploadOk = 1;
-                $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-// Check if image file is a actual image or fake image
-                if (isset($_POST["submit"])) {
-                    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"][$i]);
-                    if ($check !== false) {
-                        echo "File is an image - " . $check["mime"] . ".";
-                        $uploadOk = 1;
-                    } else {
-                        echo "File is not an image.";
-                        $uploadOk = 0;
-                    }
-                }
-                // Check if file already exists
-                if (file_exists($target_file)) {
-                    $uploadOk = 0;
-                }
-                // Check file size
-                if ($_FILES["fileToUpload"]["size"][$i] > 500000) {
-                    $uploadOk = 0;
-                }
-                // Allow certain file formats
-                if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-                    && $imageFileType != "gif") {
-                    $uploadOk = 0;
-                }
-                // Check if $uploadOk is set to 0 by an error
-                if ($uploadOk == 0) {
-
-                // if everything is ok, try to upload file
-                } else {
-                    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"][$i], $target_file)) {
-                        echo "The file " . basename($_FILES["fileToUpload"]["name"][$i]) . " has been uploaded.";
-                    }
-                }
-            }
-
             $carDao = new CarRepository(Connection::getPdoInstance());
-            $carDao->insertCar($_POST["mileage"], $_POST["year"], $_POST["power"], $_POST["gearbox"], $_POST["fuel"], $_POST["color"], $_POST["price"], $_POST["brandmodel"], $_POST["prew"], $folder);
+            $carDao->updateCar($_POST["mileage"], $_POST["year"], $_POST["power"], $_POST["gearbox"], $_POST["fuel"], $_POST["color"], $_POST["price"], $_POST["brandmodel"], $_POST["idcar"]);
 
-            $lastIndex = $carDao->getLastIndex()[0];
+            $lastIndex = $_POST["idcar2"];
 
             $equipDao = new EquipmentRepository(Connection::getPdoInstance());
+            $equipDao->delete($lastIndex);
             foreach ($_POST["equipment"] as $key => $data) {
                 if (is_array($data)) {
                     displayRecursiveResults($data);
                 } elseif (is_object($data)) {
                     displayRecursiveResults($data);
                 } else {
-                    echo "Equip IDCar: " . $lastIndex . " IDEquip: " . $key . "<br />";
-                    $equipDao->insertCarEquipment($key,$lastIndex);
+                    $equipDao->insertCarEquipment($key, $lastIndex);
                 }
             }
 
 
             $equipDao2 = new SpecEquipmentRepository(Connection::getPdoInstance());
+            $equipDao2->delete($lastIndex);
             foreach ($_POST["specEquipment"] as $key => $data) {
                 if (is_array($data)) {
                     displayRecursiveResults($data);
@@ -99,13 +63,12 @@
                 } else {
                     if (!empty($data)) {
                         echo "SpecialEquip IDCar:" . $lastIndex . " IDSpecialEquip: " . $key . " Data: " . $data . "<br />";
-                        $equipDao2->insertEquipment($lastIndex,$key,$data);
+                        $equipDao2->insertEquipment($lastIndex, $key, $data);
                     }
                 }
             }
 
-            $successFeedback = "Model byl přidán";
-            echo 'Vkladam...';
+            $successFeedback = "Model byl upraven<br>";
             echo '<div class="loader"></div>';
             echo '<script type="text/javascript">',
             'hlavni();',
@@ -130,27 +93,47 @@
     Značka a model:<br>
     <?php
     $carDao = new ModelRepository(Connection::getPdoInstance());
-    $allUsersResult = $carDao->getAllModel();
+    $allEquipResult = $carDao->getAllModel();
 
-    $datatable = new Dropdown($allUsersResult, "brandmodel");
+    $datatable = new Dropdown($allEquipResult, "brandmodel");
     $datatable->addColumn("idmodel", "ID");
     $datatable->addColumn("namebrand", "Nazev");
     $datatable->addColumn("namemodel", "Nazev");
     $datatable->render();
 
     ?>
+    <script>
+        var ddlArray = new Array();
+        var ddl = document.getElementsByName('brandmodel');
+        var pole = ddl[0];
+        for (i = 0; i < pole.options.length; i++) {
+            if (pole.options[i].value == "<?php echo $brandId?>") {
+                pole.options[i].selected = 'selected';
+            }
+        }
+    </script>
     Počet km:<br>
-    <input type="number" name="mileage" placeholder="Počet km"/>
+    <input type="number" name="mileage" value=<?php echo $mileageValue ?> placeholder="Počet km"/>
     Rok výroby:<br>
-    <input type="number" name="year" placeholder="Rok výroby"/>
+    <input type="number" name="year" value=<?php echo $yearValue ?> placeholder="Rok výroby"/>
     Výkon v kw:<br>
-    <input type="number" name="power" placeholder="Výkon"/>
+    <input type="number" name="power" value=<?php echo $powerValue ?> placeholder="Výkon"/>
     Převodovka:<br>
     <select name="gearbox">
         <option value="Manuální">Manuální</option>
         <option value="Automatická">Automatická</option>
         <option value="Poloautomatická">Poloautomatická</option>
     </select>
+    <script>
+        var ddlArray = new Array();
+        var ddl = document.getElementsByName('gearbox');
+        var pole = ddl[0];
+        for (i = 0; i < pole.options.length; i++) {
+            if (pole.options[i].value == "<?php echo $gearboxValue?>") {
+                pole.options[i].selected = 'selected';
+            }
+        }
+    </script>
     Palivo:<br>
     <select name="fuel">
         <option value="Benzín">Benzín</option>
@@ -162,13 +145,22 @@
         <option value="CNG">CNG</option>
         <option value="Vodík">Vodík</option>
     </select>
+    <script>
+        var ddlArray = new Array();
+        var ddl = document.getElementsByName('fuel');
+        var pole = ddl[0];
+        for (i = 0; i < pole.options.length; i++) {
+            if (pole.options[i].value == "<?php echo $fuelValue?>") {
+                pole.options[i].selected = 'selected';
+            }
+        }
+    </script>
 
     Barva:<br>
-    <input type="text" name="color" placeholder="Barva"/>
+    <input type="text" name="color" value=<?php echo $colorValue ?> placeholder="Barva"/>
     Cena v kč:<br>
-    <input type="number" name="price" placeholder="Cena"/>
-    Fotografie:
-    <!--<input type="file" name="file[]" id="file" accept="image/x-png,image/gif,image/jpg,image/jpeg" multiple>-->
+    <input type="number" name="price" value=<?php echo $priceValue ?> placeholder="Cena"/>
+    <!--Fotografie:
     <input type="file" name="fileToUpload[]" id="fileToUpload" onchange="displayFiles();" multiple>
     <p>Náhled</p>
     <div id="list"></div>
@@ -193,36 +185,56 @@
                 list.appendChild(text);
             }
         }
-    </script>
+    </script>-->
     <h2>Vybava</h2>
     <?php
     $equipDao = new EquipmentRepository(Connection::getPdoInstance());
-    $allUsersResult = $equipDao->getAllEquipment();
+    $allEquipResult = $equipDao->getAllEquipment();
 
-    $datatable = new JsonEquipment($allUsersResult, "brandmodel");
+    $datatable = new JsonEquipment($allEquipResult, "brandmodel");
     $json = json_decode($datatable->get());
 
+    $vysledek = $equipDao->getEquipmentById($_GET["id"]);
+
     foreach ($json as $item) {
-        echo '<input type="checkbox" name="equipment[' . $item->idequipment . ']" id=' . $item->idequipment . ' value=' . $item->idequipment . '>';
+        echo '<input type="checkbox" name="equipment[' . $item->idequipment . ']" id=' . $item->idequipment . ' value=' . $item->idequipment;
+        $index = $item->idequipment;
+        foreach ($vysledek as $item2) {
+            if ($index == $item2[1]) {
+                echo " checked";
+            }
+        }
+        echo '>';
         echo $item->value . '<br>';
     }
-
-
     ?>
     <h2>Specialni vybava</h2>
     <?php
     $carDao = new SpecEquipmentRepository(Connection::getPdoInstance());
-    $allUsersResult = $carDao->getAllEquipment();
+    $allEquipResult = $carDao->getAllEquipment();
 
-    $datatable = new JsonSpecEquipment($allUsersResult, "brandmodel");
+    $datatable = new JsonSpecEquipment($allEquipResult, "brandmodel");
     $json = json_decode($datatable->get());
+
+    $vysledek = $carDao->getEquipmentById($_GET["id"]);
 
     foreach ($json as $item) {
         echo $item->name . '<br>';
-        echo '<input type="text"  name="specEquipment[' . $item->idspecific_equipment . ']" id=' . $item->idspecific_equipment . '><br>';
+        echo '<input type="text"  name="specEquipment[' . $item->idspecific_equipment . ']" id=' . $item->idspecific_equipment;
+
+        $index = $item->idspecific_equipment;
+
+        foreach ($vysledek as $item2) {
+            if ($index == $item2[1]) {
+                echo " value=" . $item2[2];
+            }
+        }
+        echo "><br>";
+
     }
 
 
     ?>
+    <input type="hidden" name="idcar2" value="<?php echo $_GET["id"]?>">
     <input type="submit" value="Nahrát" name="submit">
 </form>
