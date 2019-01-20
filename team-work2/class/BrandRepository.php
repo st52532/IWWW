@@ -58,4 +58,24 @@ class BrandRepository
         $stmt->bindParam(':name', $name);
         $stmt->execute();
     }
+
+    public function ifExist($name) {
+        $stmt2 = $this->conn->prepare("SET NAMES 'utf8'");
+        $stmt2->execute();
+
+        $stmt = $this->conn->prepare("SELECT count(*) FROM brand WHERE name =:name");
+        $stmt->bindParam(':name', $name);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+
+    public function getIdByName($name) {
+        $stmt2 = $this->conn->prepare("SET NAMES 'utf8'");
+        $stmt2->execute();
+
+        $stmt = $this->conn->prepare("select idbrand from brand where name =:name");
+        $stmt->bindParam(':name', $name);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
 }

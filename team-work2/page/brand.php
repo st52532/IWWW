@@ -7,6 +7,7 @@
 <?php
 if ($_GET["action"] == "read-all") {
     echo "<h2>Všechny značky</h2>";
+
     $userDao = new BrandRepository(Connection::getPdoInstance());
     $allUsersResult = $userDao->getAllBrands();
 

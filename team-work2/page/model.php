@@ -10,8 +10,8 @@ if ($_GET["action"] == "read-all") {
     $userDao = new ModelRepository(Connection::getPdoInstance());
     $allUsersResult = $userDao->getAllModel();
 
-    $model="model";
-    $datatable = new DataTable($allUsersResult,$model);
+    $model = "model";
+    $datatable = new DataTable($allUsersResult, $model);
     $datatable->addColumn("idmodel", "ID");
     $datatable->addColumn("namebrand", "Značka");
     $datatable->addColumn("namemodel", "Model");
@@ -27,7 +27,6 @@ if ($_GET["action"] == "delete") {
     $userDao->removeById($_GET["id"]);
     echo '<script type="text/javascript">',
     'hlavni();',
-    '</script>'
-    ;
+    '</script>';
 }
 ?>

@@ -16,9 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($errorFeedbacks)) {
         //success
 
-        echo $_POST["name"];
-        echo $_POST["id"];
-
         $userDao = new BrandRepository(Connection::getPdoInstance());
         $userDao->update($_POST["id"],$_POST["name"]);
         $successFeedback = "Značka byla updat";
@@ -46,8 +43,6 @@ if (!empty($errorFeedbacks)) {
 if (empty($errorFeedbacks)) { //load data origin data from database
     $userDao = new BrandRepository(Connection::getPdoInstance());
     $allUsersResult = $userDao->getBrandById($_GET["id"]);
-    //echo array_values($all);
-    print_r($allUsersResult);
     echo "<h2>".$allUsersResult["name"]."</h2>";
 
     $nameValue = $allUsersResult["name"];
@@ -59,5 +54,5 @@ if (empty($errorFeedbacks)) { //load data origin data from database
 <form method="post">
     <input type="hidden" name="id" value="<?= $_GET["id"]; ?>">
     <input type="text" name="name" placeholder="Značka" value="<?= $nameValue?>"/>
-    <input type="submit" name="isSubmitted" value="Vložit">
+    <input type="submit" name="isSubmitted" value="Upravit">
 </form>
