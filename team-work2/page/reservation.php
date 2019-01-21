@@ -35,3 +35,31 @@ if ($_GET["action"] == "delete") {
     ;
 }
 ?>
+<?php
+if ($_GET["action"] == "sell") {
+    echo "<h2>Sell...</h2>";
+    echo "<h2>".$_GET["id"]."</h2>";
+
+    $reservationDao2 = new CarRepository(Connection::getPdoInstance());
+    $reservationDao2->sellCar($_GET["id"]);
+    echo "jop";
+    $reservationDao = new ReservationRepository(Connection::getPdoInstance());
+    $aaa=$reservationDao->getCarId($_GET["id"]);
+    echo "jop";
+    print_r($aaa);
+    echo "---".$aaa[0]."---";
+
+    $saleDao = new SaleRepository(Connection::getPdoInstance());
+    $saleDao->insertSale($aaa[0]);
+    echo "jop";
+
+
+    $reservationDao->removeById($_GET["id"]);
+    echo "jop";
+
+    echo '<script type="text/javascript">';
+    echo 'hlavni();';
+    echo '</script>';
+
+}
+?>

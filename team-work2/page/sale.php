@@ -3,22 +3,20 @@
         location.replace("http://localhost:63342/IWWW/team-work2/index.php?page=reservation&action=read-all")
     }
 </script>
-<h1>Rezervace</h1>
+<h1>Prodej</h1>
 <?php
 if ($_GET["action"] == "read-all") {
-    echo "<h2>Všechny rezervace</h2>";
-    $reservationDao = new ReservationRepository(Connection::getPdoInstance());
-    $allReservationResult = $reservationDao->getAllReservations();
-
+    echo "<h2>Všechen prodej</h2>";
+    $reservationDao = new SaleRepository(Connection::getPdoInstance());
+    $allReservationResult = $reservationDao->getAllSale();
+//idsale,c.idcar as carid,b.name as brandname, m.name as modelname
     $model="reservation";
-    $datatable = new DataTableReservation($allReservationResult,$model);
-    $datatable->addColumn("idreservation", "ID");
-    $datatable->addColumn("name_surname", "Jméno a příjmení");
-    $datatable->addColumn("email", "Email");
-    $datatable->addColumn("phone", "Telefon");
-    $datatable->addColumn("carid", "ID auta");
+    $datatable = new DataTableSale($allReservationResult,$model);
+    $datatable->addColumn("idsale", "ID");
+    $datatable->addColumn("carid", "ID Auta");
     $datatable->addColumn("brandname", "Značka");
     $datatable->addColumn("modelname", "Model");
+    $datatable->addColumn("price", "Cena v Kč");
     $datatable->render();
 }
 ?>

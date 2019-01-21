@@ -1,6 +1,6 @@
 <?php
 
-class DataTableReservation
+class DataTableCar
 {
     private $dataSet;
     private $columns;
@@ -31,7 +31,7 @@ class DataTableReservation
             echo "<th>" . $value["table-head-title"] . "</th>";
         }
         echo "<th>";
-        echo "Prodat";
+        echo "Upravit";
         echo "</th>";
 
         echo "<th>";
@@ -52,9 +52,9 @@ class DataTableReservation
                 echo "<td>" . $row[$key] . "</td>";
             }
             echo "<td>";
-            echo "<a href='?page=" . $this->page . "&action=sell&id="
+            echo "<a href='?page=car-update&id="
                 . $id .
-                "'>P</a>";
+                "'>U</a>";
             echo "</td>";
 
             echo "<td>";

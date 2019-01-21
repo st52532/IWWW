@@ -11,7 +11,7 @@ if ($_GET["action"] == "read-all") {
     $allUsersResult = $userDao->getAllCars();
 
     $model="car";
-    $datatable = new DataTable($allUsersResult,$model);
+    $datatable = new DataTableCar($allUsersResult,$model);
     $datatable->addColumn("id", "ID");
     $datatable->addColumn("brandname", "Značka");
     $datatable->addColumn("modelname", "Model");

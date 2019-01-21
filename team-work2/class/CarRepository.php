@@ -13,13 +13,19 @@ class CarRepository
         $this->conn = $conn;
 
     }
+    public function sellCar($id)
+    {
+        $stmt = $this->conn->prepare("update car set sold='1' where idcar=(select car_idcar from reservation where idreservation =:id)");
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+    }
 
     public function getAllCars()
     {
         $stmt2 = $this->conn->prepare("SET NAMES 'utf8'");
         $stmt2->execute();
 
-        $stmt = $this->conn->prepare("SELECT * FROM car_model_brand");
+        $stmt = $this->conn->prepare("SELECT * FROM car_model_brand where sold=0");
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -50,7 +56,7 @@ class CarRepository
         $stmt2->execute();
 
         $stmt = $this->conn->prepare("select * from car_model_brand
-where idbrand like :idbrand2
+where sold=0 and idbrand like :idbrand2
   and idmodel like :idmodel2
   and year between :yearFrom and :yearTo
   and mileage between :mileageFrom and :mileageTo
@@ -108,7 +114,8 @@ where idbrand like :idbrand2
         return $stmt->fetch();
     }
 
-    public function getLastIndex(){
+    public function getLastIndex()
+    {
         $stmt2 = $this->conn->prepare("SET NAMES 'utf8'");
         $stmt2->execute();
 
@@ -116,4 +123,5 @@ where idbrand like :idbrand2
         $stmt->execute();
         return $stmt->fetch();
     }
+
 }

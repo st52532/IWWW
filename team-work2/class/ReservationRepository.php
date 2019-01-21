@@ -20,6 +20,17 @@ class ReservationRepository
         return $stmt->fetchAll();
     }
 
+    public function getCarId($idCar)
+    {
+        $stmt2 = $this->conn->prepare("SET NAMES 'utf8'");
+        $stmt2->execute();
+
+        $stmt = $this->conn->prepare("Select car_idcar from reservation where idreservation =:idCar");
+        $stmt->bindParam(':idCar', $idCar);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+
     public function insertReservation($idCar, $name, $email, $phone)
     {
         $stmt2 = $this->conn->prepare("SET NAMES 'utf8'");

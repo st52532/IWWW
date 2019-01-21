@@ -1,6 +1,6 @@
 <?php
 
-class DataTableReservation
+class DataTableSale
 {
     private $dataSet;
     private $columns;
@@ -30,13 +30,7 @@ class DataTableReservation
         foreach ($this->columns as $key => $value) {
             echo "<th>" . $value["table-head-title"] . "</th>";
         }
-        echo "<th>";
-        echo "Prodat";
-        echo "</th>";
 
-        echo "<th>";
-        echo "Smazat";
-        echo "</th>";
         echo "</tr>";
         echo "</thead>";
         echo "<tbody>";
@@ -51,17 +45,6 @@ class DataTableReservation
                 }
                 echo "<td>" . $row[$key] . "</td>";
             }
-            echo "<td>";
-            echo "<a href='?page=" . $this->page . "&action=sell&id="
-                . $id .
-                "'>P</a>";
-            echo "</td>";
-
-            echo "<td>";
-            echo "<a href='?page=" . $this->page . "&action=delete&id="
-                . $id .
-                "'>S</a>";
-            echo "</td>";
 
             echo "</tr>";
         }
